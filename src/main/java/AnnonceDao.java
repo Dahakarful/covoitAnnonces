@@ -7,13 +7,13 @@ import java.util.List;
 /**
  * Created by Ragonda on 20/01/2017.
  */
-public class AnnoncesDao {
+public class AnnonceDao {
 
-    static List<Annonces> annonces = new LinkedList<>();
+    static List<Annonce> annonces = new LinkedList<>();
     private final DB db;
     private final DBCollection collection;
 
-    public AnnoncesDao(DB db){
+    public AnnonceDao(DB db){
         this.db = db;
         this.collection = db.getCollection("annonces");
     }

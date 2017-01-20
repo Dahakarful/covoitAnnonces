@@ -1,13 +1,13 @@
 /**
  * Created by Ragonda on 20/01/2017.
  */
-public class Annonces {
+public class Annonce {
 
     private String villeDepart;
     private String villeArrivee;
     private int distance;
 
-    public Annonces(String villeDepart, String villeArrivee, int distance){
+    public Annonce(String villeDepart, String villeArrivee, int distance){
         this.villeDepart = villeDepart;
         this.villeArrivee = villeArrivee;
         this.distance = distance;
