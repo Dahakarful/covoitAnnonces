@@ -1,8 +1,8 @@
 import com.mongodb.*;
 
-import static spark.Spark.before;
-import static spark.Spark.options;
-import static spark.Spark.port;
+import java.util.*;
+
+import static spark.Spark.*;
 
 /**
  * Created by Ragonda on 20/01/2017.
@@ -11,9 +11,10 @@ public class Application {
 
     private static DB mongo() throws Exception{
         String host = System.getenv("MONGODB_ADDON_HOST");
+        System.out.println(host);
         if(host == null){
             MongoClient mongoClient = new MongoClient("localhost");
-            return mongoClient.getDB("todoapp");
+            return mongoClient.getDB("covoiturage");
         }
         int port = 27017;
         String dbname = System.getenv("MONGODB_ADDON_DB");
@@ -31,8 +32,61 @@ public class Application {
     }
 
     public static void main(String args[]) throws Exception {
-        port(8080);
+        port(8083);
         enableCORS("*", "*", "*");
+
+        AnnonceDao annonceDao = new AnnonceDao(mongo());
+
+        // AJOUTER ANNONCE ---------------------------------------------------
+        post("/ajouterAnnonce", (req, res) -> {
+            System.out.println(
+                    req.queryParams("proprietaire").toString() + " " +
+                    req.queryParams("villeDepart").toString() + " " +
+                    req.queryParams("villeArrivee").toString() + " " +
+                    req.queryParams("nbPlaces").toString() + " " +
+                    req.queryParams("prix").toString() + " " +
+                    req.queryParams("dateDepart").toString()
+            );
+            Map<String, String> map = new HashMap<String, String>();
+            map.put("email", req.queryParams("proprietaire").toString());
+            Annonce annonce = new Annonce(
+                    map,
+                    req.queryParams("villeDepart"),
+                    req.queryParams("villeArrivee"),
+                    Integer.parseInt(req.queryParams("nbPlaces")),
+                    Integer.parseInt(req.queryParams("prix")),
+                    Utils.stringToDate(req.queryParams("dateDepart")));
+            try {
+                annonceDao.ajouterAnnonce(annonce);
+            }catch(Exception e){
+                System.out.println(e);
+            }
+            res.status(201);
+            return annonce;
+        }, new JsonTransformer());
+        // --------------------------------------------------------------------------
+
+        // SUPPRIMER ANNONCE -------------------------------------------------
+        post("/supprimerAnnonce", (req, res) -> {
+            annonceDao.supprimerAnnonce(
+                    req.queryParams("idUtilisateur"),
+                    req.queryParams("idAnnonce"));
+            res.status(201);
+            return "supprimerAnnonce";
+        }, new JsonTransformer());
+        // -------------------------------------------------------------------
+
+        // AVOIR TOUTES LES ANNONCES -----------------------------------------
+        get("/listAnnonces", (req, res) -> {
+            List<Annonce> list = new ArrayList<>();
+            try {
+                list = (List) annonceDao.listAnnonces();
+            }catch(Exception e){
+                System.out.println(e);
+            }
+            res.status(201);
+            return list;
+        }, new JsonTransformer());
     }
 
     // Enables CORS on requests. This method is an initialization method and should be called once.
