@@ -1,4 +1,6 @@
+import com.google.gson.Gson;
 import com.mongodb.*;
+import com.mongodb.util.JSON;
 
 import java.util.*;
 
@@ -86,6 +88,24 @@ public class Application {
             }
             res.status(201);
             return list;
+        }, new JsonTransformer());
+        // -------------------------------------------------------------------
+
+        // RESERVER UNE ANNONCE ----------------------------------------------
+        post("/reserver", (req, res) -> {
+            String result = "";
+            try{
+                result = annonceDao.reserver(
+                        req.queryParams("reservation"),
+                        req.queryParams("proprietaire"),
+                        req.queryParams("villeDepart"),
+                        req.queryParams("villeArrivee"),
+                        Utils.stringToDate(req.queryParams("dateDepart"))
+                );
+            }catch(Exception e){
+                System.out.println(e);
+            }
+            return result;
         }, new JsonTransformer());
     }
 

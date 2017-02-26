@@ -14,7 +14,7 @@ public class Annonce {
     private String villeArrivee;
     private int nbPlaces;
     private int prix;
-    private List<String> passagers;
+    private List<Passager> passagers;
     private Date dateDepart;
 
     public Annonce(BasicDBObject basicDBObject){
@@ -69,11 +69,11 @@ public class Annonce {
         this.prix = prix;
     }
 
-    public List<String> getPassagers() {
+    public List<Passager> getPassager() {
         return passagers;
     }
 
-    public void setPassagers(List<String> passagers) {
+    public void setPassager(List<Passager> passagers) {
         this.passagers = passagers;
     }
 
