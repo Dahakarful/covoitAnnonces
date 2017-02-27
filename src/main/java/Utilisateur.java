@@ -1,16 +1,20 @@
+import java.io.Serializable;
+
 /**
  * Created by Ragonda on 26/02/2017.
  */
-public class Passager{
+public class Utilisateur implements Serializable{
 
     private String nom;
     private String prenom;
     private String id;
+    private String email;
 
-    public Passager(String id, String prenom, String nom){
+    public Utilisateur(String id, String prenom, String nom, String email){
         this.id = id;
         this.prenom = prenom;
         this.nom = nom;
+        this.email = email;
     }
 
     public String getNom() {
@@ -35,5 +39,13 @@ public class Passager{
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

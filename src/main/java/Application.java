@@ -49,15 +49,14 @@ public class Application {
                     req.queryParams("prix").toString() + " " +
                     req.queryParams("dateDepart").toString()
             );
-            Map<String, String> map = new HashMap<String, String>();
-            map.put("email", req.queryParams("proprietaire").toString());
+            Utilisateur utilisateur = new Utilisateur("", "", "", req.queryParams("proprietaire").toString());
             Annonce annonce = new Annonce(
-                    map,
+                    utilisateur,
                     req.queryParams("villeDepart"),
                     req.queryParams("villeArrivee"),
                     Integer.parseInt(req.queryParams("nbPlaces")),
                     Integer.parseInt(req.queryParams("prix")),
-                    Utils.stringToDate(req.queryParams("dateDepart")));
+                    Utils.stringToDate(req.queryParams("dateDepart")).toString());
             try {
                 annonceDao.ajouterAnnonce(annonce);
             }catch(Exception e){
@@ -82,7 +81,7 @@ public class Application {
         get("/listAnnonces", (req, res) -> {
             List<Annonce> list = new ArrayList<>();
             try {
-                list = (List) annonceDao.listAnnonces();
+                list = (List<Annonce>) annonceDao.listAnnonces();
             }catch(Exception e){
                 System.out.println(e);
             }
@@ -100,7 +99,7 @@ public class Application {
                         req.queryParams("proprietaire"),
                         req.queryParams("villeDepart"),
                         req.queryParams("villeArrivee"),
-                        Utils.stringToDate(req.queryParams("dateDepart"))
+                        req.queryParams("dateDepart")
                 );
             }catch(Exception e){
                 System.out.println(e);

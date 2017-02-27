@@ -1,47 +1,68 @@
+import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 
-import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by Ragonda on 20/01/2017.
  */
 public class Annonce {
 
-    private Map<String, String> proprietaire;
+    private Utilisateur proprietaire;
     private String villeDepart;
     private String villeArrivee;
     private int nbPlaces;
     private int prix;
-    private List<Passager> passagers;
-    private Date dateDepart;
+    private List<Utilisateur> utilisateurs;
+    private String dateDepart;
 
     public Annonce(BasicDBObject basicDBObject){
-        this.proprietaire = (Map) basicDBObject.get("proprietaire");
+        BasicDBList proprietaire = (BasicDBList) basicDBObject.get("proprietaire");
+        System.out.println(proprietaire.toString());
+        String email = "";
+        String nom = "";
+        String prenom = "";
+        String id = "";
+        BasicDBObject[] proprietaireArr = proprietaire.toArray(new BasicDBObject[0]);
+        for(BasicDBObject dbObj : proprietaireArr) {
+            if(dbObj.get("email") != null){
+                email = dbObj.get("email").toString();
+            }
+            if(dbObj.get("nom") != null){
+                nom = dbObj.get("nom").toString();
+            }
+            if(dbObj.get("prenom") != null){
+                prenom = dbObj.get("prenom").toString();
+            }
+            if(dbObj.get("id") != null){
+                id = dbObj.get("id").toString();
+            }
+        }
+        Utilisateur utilisateur = new Utilisateur(id, prenom, nom, email);
+        this.proprietaire = utilisateur;
         this.villeDepart = basicDBObject.getString("villeDepart");
         this.villeArrivee = basicDBObject.getString("villeArrivee");
         this.prix = basicDBObject.getInt("prix");
-        this.passagers = (List) basicDBObject.get("passager");
-        this.dateDepart = basicDBObject.getDate("dateDepart");
+        this.utilisateurs = (List) basicDBObject.get("passager");
+        this.dateDepart = basicDBObject.getString("dateDepart");
         this.nbPlaces = basicDBObject.getInt("nbPlaces");
     }
 
-    public Annonce(Map<String, String> proprietaire, String villeDepart, String villeArrivee, int nbPlaces, int prix, Date dateDepart){
+    public Annonce(Utilisateur proprietaire, String villeDepart, String villeArrivee, int nbPlaces, int prix, String dateDepart){
         this.proprietaire = proprietaire;
         this.dateDepart = dateDepart;
         this.villeDepart = villeDepart;
         this.nbPlaces = nbPlaces;
         this.villeArrivee = villeArrivee;
         this.prix = prix;
-        this.passagers = null;
+        this.utilisateurs = null;
     }
 
-    public Map<String, String> getProprietaire() {
+    public Utilisateur getProprietaire() {
         return proprietaire;
     }
 
-    public void setProprietaire(Map<String, String> proprietaire) {
+    public void setProprietaire(Utilisateur proprietaire) {
         this.proprietaire = proprietaire;
     }
 
@@ -69,19 +90,19 @@ public class Annonce {
         this.prix = prix;
     }
 
-    public List<Passager> getPassager() {
-        return passagers;
+    public List<Utilisateur> getPassager() {
+        return utilisateurs;
     }
 
-    public void setPassager(List<Passager> passagers) {
-        this.passagers = passagers;
+    public void setPassager(List<Utilisateur> utilisateurs) {
+        this.utilisateurs = utilisateurs;
     }
 
-    public Date getDateDepart() {
+    public String getDateDepart() {
         return dateDepart;
     }
 
-    public void setDateDepart(Date dateDepart) {
+    public void setDateDepart(String dateDepart) {
         this.dateDepart = dateDepart;
     }
 
